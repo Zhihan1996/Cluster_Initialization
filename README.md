@@ -1,6 +1,6 @@
 # Cluster Initionlizing
 
-##1. Cancel the ssh password
+## 1. Cancel the ssh password between any cluster nodes
 
 - Clone this repo 
 
@@ -11,7 +11,7 @@
 - Open the ***ssh_password.sh***, change the variable ***USER*** to your own username. 
 
   ```
-  Note: if you do not have a username yet, please contact me at zhihanzhou2020@u.northwestern.edu.
+  Note: if you do not have a username yet, please contact me at zhihanzhou2020@u.northwestern.edu
   ```
 
 - Run the shell script in your local terminal 
@@ -21,13 +21,16 @@
   sh ssh_password.sh
   ```
 
-  Enter your password when it is asked. Otherwise, press "Enter".
+  - For "username@192.168.100.10x's password" type your password
+  - For "Enter file in which to save the key" press "Enter"
+  - For "Overwrite (y/n)" type "y"
+  - For "Enter passphrase (empty for no passphrase)" and "Enter same passphrase again" press "Enter"
 
 
 
 
 
-## 2. Open vnc server for graphical interface (Optional)
+## 2. Run vnc server for graphical interface (Optional)
 
 - Download vnc viewer at https://www.realvnc.com/en/connect/download/viewer/
 
@@ -62,12 +65,16 @@
 
 ## 3. Create conda environment for Python
 
+- Connect to the container
+
 - Download anaconda and install it
 
   ```
   wget https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
   sh Anaconda3-2019.03-Linux-x86_64.sh
   ```
+
+- For "Do you wish the installer to initialize Anaconda3 by running conda init?" type "yes". Then exit and login again, you will be able to call "conda" command
 
 - Create a virtual environment and activate it
 
@@ -82,23 +89,39 @@
   conda install tensorflow-gpu
   conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
   conda install gcc_linux-64 gxx_linux-64
-  HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_WITH_PYTORCH=1 HOROVOD_WITH_TENSORFLOW=1 pip install --no-cache-dir horovod
+  HOROVOD_NCCL_HOME=/home/lib/nccl_2.4.7-1+cuda10.0_x86_64 HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_WITH_PYTORCH=1 HOROVOD_WITH_TENSORFLOW=1 pip install --no-cache-dir horovod
   ```
 
 
 
 
+## 4. Verify if the install is success
 
-##4. Run distributed training with Horovod
-
-- Modify your code based on official guidance: https://github.com/horovod/horovod
-
-- An example of training model on node 2, 4, 6 with 12 GPUs is 
+- Clone the official repo
 
   ```
-  horovodrun -p 12345 -np 12 -H 10.0.1.22:4,10.0.1.24:4,10.0.1.26:4 python tensorflow_mnist.py
+  https://github.com/horovod/horovod
+  ```
+
+- An example of training model on node 1, 2 with 8 GPUs is 
+
+  ```
+  chmod -R 777 /horovod
+  cd /horovod/examples
+  horovodrun -p 12345 -np 8 -H 10.0.1.21:4,10.0.1.22:4 python tensorflow_mnist.py
   ```
 
   Here the 10.0.1.2{x} stands for the IP address of Infiniband Interface of $x_{th}$ cluster node. 
 
   You should always use this IP address for distributed training instead of the one start with 192.168...
+
+
+
+
+
+
+
+## 5. Modify your own code for distributed training
+
+- See https://github.com/horovod/horovod for more detail
+- To be continue

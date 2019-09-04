@@ -86,8 +86,8 @@
 - Install the required package
 
   ```
-  conda install tensorflow-gpu
-  conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
+  conda install tensorflow-gpu=1.13.1
+  conda install pytorch=1.1 torchvision cudatoolkit=10.0 -c pytorch
   conda install gcc_linux-64 gxx_linux-64
   HOROVOD_NCCL_HOME=/home/lib/nccl_2.4.7-1+cuda10.0_x86_64 HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_WITH_PYTORCH=1 HOROVOD_WITH_TENSORFLOW=1 pip install --no-cache-dir horovod
   ```
